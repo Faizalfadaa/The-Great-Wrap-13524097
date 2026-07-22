@@ -1,4 +1,5 @@
-import type { Algorithm, CanvasPoint } from "../types";
+import type { Point } from "../algorithm/point";
+import type { Algorithm } from "../types";
 import { AlgorithmSelector } from "./AlgorithmSelector";
 import { DatasetGenerator } from "./DatasetGenerator";
 import { FileUpload } from "./FileUpload";
@@ -8,8 +9,8 @@ type SidebarProps = {
   selectedFile: File | null;
   onAlgorithmChange: (algorithm: Algorithm) => void;
   onFileChange: (file: File | null) => void;
-  onImportPoints: (points: CanvasPoint[]) => void;
-  onGenerate: (points: CanvasPoint[]) => void;
+  onImportPoints: (points: Point[]) => void;
+  onGenerate: (points: Point[]) => void;
   onStart: () => void;
 };
 
