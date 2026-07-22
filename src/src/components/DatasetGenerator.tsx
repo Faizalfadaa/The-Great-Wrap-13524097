@@ -1,9 +1,9 @@
 import { useState } from "react"
-import type { CanvasPoint, GeneratorShape } from "../types"
-import { createPoint } from "../utils/points"
+import { createPoint, type Point } from "../algorithm/point"
+import type { GeneratorShape } from "../types"
 
 type DatasetGeneratorProps = {
-  onGenerate: (points: CanvasPoint[]) => void
+  onGenerate: (points: Point[]) => void
 };
 
 export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
@@ -11,7 +11,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
   const [generatorCount, setGeneratorCount] = useState(24)
 
   const generateDataset = () => {
-    const generatedPoints: CanvasPoint[] = []
+    const generatedPoints: Point[] = []
     const count = Math.max(3, generatorCount)
 
     for (let index = 0; index < count; index += 1) {
@@ -73,4 +73,3 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
     </section>
   );
 }
-
