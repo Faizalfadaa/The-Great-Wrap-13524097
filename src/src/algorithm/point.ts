@@ -9,6 +9,11 @@ export class Point {
     }
 }
 
+// For create a new point
+export function createPoint(x: number, y: number): Point {
+    return new Point(x, y)
+}
+
 // Distance from two points
 export function distance(p1: Point, p2: Point) : number {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2))
