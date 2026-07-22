@@ -108,6 +108,19 @@
   background: var(--color-accent-soft);
 }
 
+.playback-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.step-counter {
+  min-width: 64px;
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
 .control-icon {
   position: relative;
   display: block;
