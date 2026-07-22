@@ -1,0 +1,85 @@
+#root {
+  height: 100vh;
+  overflow: hidden;
+
+  /* Palet warna utama UI. Ubah bagian ini untuk mengganti tema aplikasi. */
+  --color-page: #10090b;
+  --color-surface: rgba(27, 18, 21, 0.92);
+  --color-surface-strong: #201316;
+  --color-border: #3b2429;
+  --color-border-strong: #684049;
+  --color-text: #fff7f8;
+  --color-muted: #d4aeb5;
+  --color-accent: #ff4d5e;
+  --color-accent-soft: rgba(255, 77, 94, 0.14);
+  --color-point: #ff4d5e;
+  --color-point-stroke: #fff7f8;
+  --color-hull: #ffd166;
+  --color-canvas-bg: #000000;
+  --color-canvas-border: #4a2a30;
+  --color-canvas-grid: rgba(255, 117, 131, 0.16);
+  --color-canvas-axis: rgba(255, 247, 248, 0.58);
+}
+
+html,
+body,
+#root,
+.input-sidebar,
+.inspector-panel {
+  scrollbar-color: var(--color-accent) #160d10;
+  scrollbar-width: thin;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar,
+.input-sidebar::-webkit-scrollbar,
+.inspector-panel::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#root::-webkit-scrollbar-track,
+.input-sidebar::-webkit-scrollbar-track,
+.inspector-panel::-webkit-scrollbar-track {
+  background: #160d10;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#root::-webkit-scrollbar-thumb,
+.input-sidebar::-webkit-scrollbar-thumb,
+.inspector-panel::-webkit-scrollbar-thumb {
+  border: 2px solid #160d10;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+#root::-webkit-scrollbar-thumb:hover,
+.input-sidebar::-webkit-scrollbar-thumb:hover,
+.inspector-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+html::-webkit-scrollbar-button,
+body::-webkit-scrollbar-button,
+#root::-webkit-scrollbar-button,
+.input-sidebar::-webkit-scrollbar-button,
+.inspector-panel::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+  background: #160d10;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+#root::-webkit-scrollbar-corner,
+.input-sidebar::-webkit-scrollbar-corner,
+.inspector-panel::-webkit-scrollbar-corner {
+  background: #160d10;
+}
