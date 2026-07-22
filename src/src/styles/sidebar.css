@@ -77,3 +77,10 @@
   color: var(--color-muted);
   font-size: 12px;
 }
+
+.file-error {
+  margin: -4px 0 0;
+  color: var(--color-accent);
+  font-size: 12px;
+  line-height: 1.4;
+}

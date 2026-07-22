@@ -8,14 +8,19 @@ type SidebarProps = {
   selectedFile: File | null;
   onAlgorithmChange: (algorithm: Algorithm) => void;
   onFileChange: (file: File | null) => void;
+  onImportPoints: (points: CanvasPoint[]) => void;
   onGenerate: (points: CanvasPoint[]) => void;
   onStart: () => void;
 };
 
-export function Sidebar({selectedAlgorithm, selectedFile, onAlgorithmChange, onFileChange, onGenerate, onStart,}: SidebarProps) {
+export function Sidebar({selectedAlgorithm, selectedFile, onAlgorithmChange, onFileChange, onImportPoints, onGenerate, onStart }: SidebarProps) {
   return (
     <aside className="input-sidebar" aria-label="Visualizer controls">
-      <FileUpload selectedFile={selectedFile} onFileChange={onFileChange} />
+      <FileUpload
+        selectedFile={selectedFile}
+        onFileChange={onFileChange}
+        onImportPoints={onImportPoints}
+      />
       <AlgorithmSelector
         selectedAlgorithm={selectedAlgorithm}
         onAlgorithmChange={onAlgorithmChange}
@@ -30,4 +35,3 @@ export function Sidebar({selectedAlgorithm, selectedFile, onAlgorithmChange, onF
     </aside>
   );
 }
-
