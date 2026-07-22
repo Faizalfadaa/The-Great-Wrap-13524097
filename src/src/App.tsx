@@ -14,10 +14,7 @@ function App() {
 
   return (
     <main className="visualizer-page">
-      <Header
-        pointCount={points.length}
-        selectedAlgorithm={selectedAlgorithm}
-      />
+      <Header />
 
       <div className="visualizer-workspace">
         <Sidebar
