@@ -14,12 +14,22 @@ function App() {
   const [showStepControls, setShowStepControls] = useState(false);
   const [hullPoints, setHullPoints] = useState<CanvasPoint[]>([]);
   const [runtimeMs, setRuntimeMs] = useState<number | null>(null);
+  const [canvasVersion, setCanvasVersion] = useState(0);
 
   const updatePoints = (nextPoints: CanvasPoint[]) => {
     setPoints(nextPoints);
     setHullPoints([]);
     setRuntimeMs(null);
     setShowStepControls(false);
+  };
+
+  const replacePoints = (nextPoints: CanvasPoint[]) => {
+    updatePoints(nextPoints);
+    setCanvasVersion((currentVersion) => currentVersion + 1);
+  };
+
+  const clearPoints = () => {
+    replacePoints([]);
   };
 
   const handleAlgorithmChange = (algorithm: Algorithm) => {
@@ -56,16 +66,18 @@ function App() {
           selectedFile={selectedFile}
           onAlgorithmChange={handleAlgorithmChange}
           onFileChange={setSelectedFile}
-          onImportPoints={updatePoints}
-          onGenerate={updatePoints}
+          onImportPoints={replacePoints}
+          onGenerate={replacePoints}
           onStart={handleStart}
         />
 
         <CanvasBoard
+          key={canvasVersion}
           points={points}
           hullPoints={hullPoints}
           showStepControls={showStepControls}
           onPointsChange={updatePoints}
+          onClear={clearPoints}
         />
 
         <InspectorPanel

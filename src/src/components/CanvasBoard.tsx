@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CanvasPoint } from "../types";
 import { createPoint } from "../utils/points";
 import { PlaybackControls } from "./PlaybackControls";
@@ -28,9 +28,10 @@ type CanvasBoardProps = {
   hullPoints: CanvasPoint[];
   showStepControls: boolean;
   onPointsChange: (points: CanvasPoint[]) => void;
+  onClear: () => void;
 };
 
-export function CanvasBoard({points, hullPoints, showStepControls, onPointsChange}: CanvasBoardProps) {
+export function CanvasBoard({points, hullPoints, showStepControls, onPointsChange, onClear}: CanvasBoardProps) {
   const [draggingPointId, setDraggingPointId] = useState<number | null>(null);
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -CANVAS_WIDTH / 2,
@@ -61,6 +62,14 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
 
   const hullPointIds = useMemo(() => new Set(hullPoints.map((point) => point.id)), [hullPoints])
   const hullPathPoints = hullPoints.map((point) => `${point.x},${point.y}`).join(" ")
+
+  useEffect(() => {
+    if (points.length === 0) {
+      setPanState(null)
+      setDraggingPointId(null)
+    }
+  }, [points.length])
+
   const getCanvasPoint = (svg: SVGSVGElement,clientX: number, clientY: number) => {
     const screenCTM = svg.getScreenCTM();
 
@@ -160,6 +169,12 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
     });
   };
 
+  const clearCanvas = () => {
+    setPanState(null)
+    setDraggingPointId(null)
+    onClear()
+  }
+
   return (
     <section className="visualization-board">
       <p className="canvas-instruction">
@@ -173,7 +188,8 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
         <button
           type="button"
           disabled={points.length === 0}
-          onClick={() => onPointsChange([])}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={clearCanvas}
         >
           Clear
         </button>
