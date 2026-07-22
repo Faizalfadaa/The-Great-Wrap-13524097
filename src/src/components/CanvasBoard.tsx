@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import type { CanvasPoint } from "../types";
-import { createPoint } from "../utils/points";
+import { createPoint, type Point } from "../algorithm/point";
+import { StepPhase, type Step } from "../types";
 import { PlaybackControls } from "./PlaybackControls";
 
 const CANVAS_WIDTH = 1200;
@@ -24,15 +24,39 @@ type PanState = {
 };
 
 type CanvasBoardProps = {
-  points: CanvasPoint[];
-  hullPoints: CanvasPoint[];
+  points: Point[];
+  hullPoints: Point[];
+  animationStep: Step | null;
   showStepControls: boolean;
-  onPointsChange: (points: CanvasPoint[]) => void;
+  onPointsChange: (points: Point[]) => void;
   onClear: () => void;
+  onPlay: () => void;
+  onPause: () => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  onStop: () => void;
+  isPlaying: boolean;
+  currentStepIndex: number;
+  totalSteps: number;
 };
 
-export function CanvasBoard({points, hullPoints, showStepControls, onPointsChange, onClear}: CanvasBoardProps) {
-  const [draggingPointId, setDraggingPointId] = useState<number | null>(null);
+export function CanvasBoard({
+  points,
+  hullPoints,
+  animationStep,
+  showStepControls,
+  onPointsChange,
+  onClear,
+  onPlay,
+  onPause,
+  onNext,
+  onPrevious,
+  onStop,
+  isPlaying,
+  currentStepIndex,
+  totalSteps,
+}: CanvasBoardProps) {
+  const [draggingPointIndex, setDraggingPointIndex] = useState<number | null>(null);
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -CANVAS_WIDTH / 2,
     y: -CANVAS_HEIGHT / 2,
@@ -60,13 +84,17 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
     return { verticalLines, horizontalLines };
   }, [viewBox]);
 
-  const hullPointIds = useMemo(() => new Set(hullPoints.map((point) => point.id)), [hullPoints])
-  const hullPathPoints = hullPoints.map((point) => `${point.x},${point.y}`).join(" ")
+  const hullPointRefs = useMemo(() => new Set(hullPoints), [hullPoints])
+  const hullPathPoints = hullPoints.map((point) => `${point.x},${-point.y}`).join(" ")
+  const persistentLines = animationStep?.persistentLines ?? []
+  const selectedPointRefs = useMemo(() => new Set(persistentLines.map((line) => line[1])), [persistentLines])
+  const sortingStartPoint = persistentLines[0]?.[0] ?? null
+  const currentPoint = animationStep?.currentPoint ?? null
 
   useEffect(() => {
     if (points.length === 0) {
       setPanState(null)
-      setDraggingPointId(null)
+      setDraggingPointIndex(null)
     }
   }, [points.length])
 
@@ -94,7 +122,7 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
   }
 
   const handleCanvasPointerMove = (event: React.PointerEvent<SVGSVGElement>,) => {
-    if (draggingPointId !== null) {
+    if (draggingPointIndex !== null) {
       const canvasPoint = getCanvasPoint(event.currentTarget,event.clientX,event.clientY);
 
       if (!canvasPoint) {
@@ -103,8 +131,8 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
 
       onPointsChange(
         points.map((point) =>
-          point.id === draggingPointId
-            ? { ...point, x: canvasPoint.x, y: canvasPoint.y }
+          point === points[draggingPointIndex]
+            ? createPoint(canvasPoint.x, -canvasPoint.y)
             : point,
         ),
       );
@@ -152,12 +180,12 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
       );
 
       if (canvasPoint) {
-        onPointsChange([...points, createPoint(canvasPoint.x, canvasPoint.y)]);
+        onPointsChange([...points, createPoint(canvasPoint.x, -canvasPoint.y)]);
       }
     }
 
     setPanState(null);
-    setDraggingPointId(null);
+    setDraggingPointIndex(null);
   };
 
   const resetView = () => {
@@ -171,7 +199,7 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
 
   const clearCanvas = () => {
     setPanState(null)
-    setDraggingPointId(null)
+    setDraggingPointIndex(null)
     onClear()
   }
 
@@ -206,7 +234,7 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
         onPointerUp={handleCanvasPointerUp}
         onPointerLeave={() => {
           setPanState(null);
-          setDraggingPointId(null);
+          setDraggingPointIndex(null);
         }}
       >
         <g className="canvas-grid">
@@ -246,25 +274,59 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
           />
         </g>
 
-        {hullPoints.length >= 2 ? (
+        {hullPoints.length >= 2 && animationStep?.phase === StepPhase.COMPLETE ? (
           <polygon className="canvas-hull" points={hullPathPoints} />
         ) : null}
 
-        {points.map((point) => (
+        {hullPoints.length >= 2 && animationStep?.phase !== StepPhase.COMPLETE ? (
+          <polyline className="canvas-hull-chain" points={hullPathPoints} />
+        ) : null}
+
+        {persistentLines.length > 0 ? (
+          <g className="canvas-sorting-lines">
+            {persistentLines.map((line) => (
+              <line
+                key={`persistent-${line[0].x}-${line[0].y}-${line[1].x}-${line[1].y}`}
+                x1={line[0].x}
+                y1={-line[0].y}
+                x2={line[1].x}
+                y2={-line[1].y}
+              />
+            ))}
+          </g>
+        ) : null}
+
+        {animationStep?.phase !== StepPhase.SORT && hullPoints.length > 0 && currentPoint ? (
+          <line
+            className="canvas-candidate-edge"
+            x1={hullPoints[hullPoints.length - 1].x}
+            y1={-hullPoints[hullPoints.length - 1].y}
+            x2={currentPoint.x}
+            y2={-currentPoint.y}
+          />
+        ) : null}
+
+        {points.map((point, index) => (
           <circle
             className={
-              hullPointIds.has(point.id)
-                ? "canvas-point canvas-point-hull"
-                : "canvas-point"
+              [
+                "canvas-point",
+                hullPointRefs.has(point) ? "canvas-point-hull" : "",
+                selectedPointRefs.has(point) ? "canvas-point-sorted" : "",
+                point === sortingStartPoint ? "canvas-point-pivot" : "",
+                point === currentPoint ? "canvas-point-current" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")
             }
-            key={point.id}
+            key={`${index}-${point.x}-${point.y}`}
             cx={point.x}
-            cy={point.y}
+            cy={-point.y}
             r="7"
             onPointerDown={(event) => {
               event.stopPropagation();
               event.currentTarget.setPointerCapture(event.pointerId);
-              setDraggingPointId(point.id);
+              setDraggingPointIndex(index);
             }}
           />
         ))}
@@ -286,13 +348,26 @@ export function CanvasBoard({points, hullPoints, showStepControls, onPointsChang
           </span>
         </div>
         <p>
-          {hullPoints.length > 0
+          {animationStep
+            ? animationStep.message
+            : hullPoints.length > 0
             ? `Convex Hull Graham Scan menghasilkan ${hullPoints.length} titik hull.`
             : "Convex Hull output belum dihitung."}
         </p>
       </div>
 
-      {showStepControls && <PlaybackControls />}
+      {showStepControls && (
+        <PlaybackControls
+          currentStepIndex={currentStepIndex}
+          isPlaying={isPlaying}
+          totalSteps={totalSteps}
+          onNext={onNext}
+          onPause={onPause}
+          onPlay={onPlay}
+          onPrevious={onPrevious}
+          onStop={onStop}
+        />
+      )}
     </section>
   );
 }

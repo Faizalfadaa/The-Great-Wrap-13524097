@@ -72,6 +72,35 @@
   pointer-events: none;
 }
 
+.canvas-hull-chain {
+  fill: none;
+  stroke: var(--color-hull);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  pointer-events: none;
+}
+
+.canvas-candidate-edge {
+  stroke: #73d2de;
+  stroke-dasharray: 10 8;
+  stroke-linecap: round;
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+.canvas-sorting-lines {
+  pointer-events: none;
+}
+
+.canvas-sorting-lines line {
+  stroke: #1aa6b7;
+  stroke-dasharray: 12 9;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+  opacity: 0.82;
+}
+
 .canvas-point {
   fill: var(--color-point);
   stroke: var(--color-point-stroke);
@@ -90,6 +119,22 @@
 .canvas-point-hull {
   fill: var(--color-hull);
   stroke: var(--color-point-stroke);
+}
+
+.canvas-point-pivot {
+  stroke: #73d2de;
+  stroke-width: 4;
+}
+
+.canvas-point-sorted {
+  fill: #73d2de;
+  stroke: #e8fbff;
+  stroke-width: 3;
+}
+
+.canvas-point-current {
+  fill: #73d2de;
+  stroke-width: 4;
 }
 
 .canvas-footer {
