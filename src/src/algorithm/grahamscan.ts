@@ -2,16 +2,20 @@ import { angle, distance, orientation, Point } from "./point";
 
 // Graham Scan Algorithm
 export function grahamScan(list: Point[]) : Point[] {
+    if (list.length <= 1) {
+        return list
+    }
+
     // Get minimum point with the minimum Y coordinate
     let minPoint : Point = list[0]
-    for(let i = 0 ; i < list.length; i++) {
-        if (list[i].y < minPoint.y) {
-            minPoint = list[i]
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].y < minPoint.y || (list[i].y === minPoint.y && list[i].x < minPoint.x)) {
+            minPoint = list[i];
         }
     }
 
     // Sort list by polar angle
-    const sortedList: Point[] = list.sort((a, b) => {
+    const sortedList: Point[] = [...list].sort((a, b) => {
         if (a === minPoint) {
             return -1;
         }
@@ -31,8 +35,8 @@ export function grahamScan(list: Point[]) : Point[] {
     
     let result : Point[] = []
     for(let i = 0; i < sortedList.length; i++) {
-        while (result.length >= 2 && orientation(result[result.length - 2], result[result.length - 1], sortedList[i]) != 1) {
-            result.pop
+        while (result.length >= 2 && orientation(result[result.length - 2], result[result.length - 1], sortedList[i]) !== 1) {
+            result.pop()
         }
         result.push(sortedList[i])
     }
