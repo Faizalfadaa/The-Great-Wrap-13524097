@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPoint, type Point } from "../algorithm/point";
-import { StepPhase, type Step } from "../types";
+import { StepPhase, type Algorithm, type Step } from "../types";
 import { PlaybackControls } from "./PlaybackControls";
 
 const CANVAS_WIDTH = 1200;
@@ -27,6 +27,7 @@ type CanvasBoardProps = {
   points: Point[];
   hullPoints: Point[];
   animationStep: Step | null;
+  selectedAlgorithm: Algorithm;
   showStepControls: boolean;
   onPointsChange: (points: Point[]) => void;
   onClear: () => void;
@@ -44,6 +45,7 @@ export function CanvasBoard({
   points,
   hullPoints,
   animationStep,
+  selectedAlgorithm,
   showStepControls,
   onPointsChange,
   onClear,
@@ -351,7 +353,7 @@ export function CanvasBoard({
           {animationStep
             ? animationStep.message
             : hullPoints.length > 0
-            ? `Convex Hull Graham Scan menghasilkan ${hullPoints.length} titik hull.`
+            ? `Convex Hull ${selectedAlgorithm} menghasilkan ${hullPoints.length} titik hull.`
             : "Convex Hull output belum dihitung."}
         </p>
       </div>

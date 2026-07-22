@@ -46,14 +46,26 @@ export function jarvisMarch(list: Point[]) : Step[] {
             currentPoint: onHull
         })
 
-        let nextPoint : Point = list[0]
+        let nextPoint : Point
+        if (list[0] === onHull) {
+            nextPoint = list[1]
+        } else {
+            nextPoint = list[0]
+        }
+
+        let checkedLines : Point[][] = []
         for(const point of list) {
+            if (point === onHull) {
+                continue
+            }
+
+            checkedLines = [...checkedLines, [onHull, point]]
             let orient : number = orientation(onHull, nextPoint, point) 
             steps.push({
                 phase: StepPhase.CHECK,
-                message: "[CHECK] Check next candidate",
+                message: "[CHECK] Check candidate point",
                 hullPoints: [...result],
-                persistentLines: [[onHull, point]],
+                persistentLines: [...checkedLines],
                 currentPoint: point
             })
 
@@ -64,7 +76,7 @@ export function jarvisMarch(list: Point[]) : Step[] {
                     phase: StepPhase.ACCEPT,
                     message: "[ACCEPT] Update next hull candidate",
                     hullPoints: [...result],
-                    persistentLines: [[onHull, nextPoint]],
+                    persistentLines: [...checkedLines],
                     currentPoint: nextPoint
                 })
             }
