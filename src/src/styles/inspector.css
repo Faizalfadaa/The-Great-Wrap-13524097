@@ -1,0 +1,78 @@
+/* Panel kanan untuk ringkasan visualisasi dan benchmark. */
+.inspector-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.metric-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.metric-grid article {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface-strong);
+}
+
+.metric-grid span {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.metric-grid strong {
+  color: var(--color-text);
+  font-size: 22px;
+}
+
+.table-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-heading span {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+th,
+td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-muted);
+  text-align: left;
+}
+
+th {
+  color: var(--color-text);
+  background: var(--color-surface-strong);
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
