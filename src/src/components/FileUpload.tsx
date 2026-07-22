@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { readFile } from "../algorithm/input";
-import type { CanvasPoint } from "../types";
-import { createPoint } from "../utils/points";
+import type { Point } from "../algorithm/point";
 
 type FileUploadProps = {
   selectedFile: File | null;
   onFileChange: (file: File | null) => void;
-  onImportPoints: (points: CanvasPoint[]) => void;
+  onImportPoints: (points: Point[]) => void;
 };
 
 export function FileUpload({selectedFile,onFileChange,onImportPoints}: FileUploadProps) {
@@ -23,7 +22,7 @@ export function FileUpload({selectedFile,onFileChange,onImportPoints}: FileUploa
 
     try {
       const parsedPoints = await readFile(file);
-      onImportPoints(parsedPoints.map((point) => createPoint(point.x, point.y)))
+      onImportPoints(parsedPoints)
 
     } catch (error) {
       console.error(error)
