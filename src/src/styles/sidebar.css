@@ -1,0 +1,79 @@
+/* Sidebar kiri untuk input dataset dan kontrol algoritma. */
+.input-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sidebar-section,
+.control-section {
+  display: grid;
+  gap: 12px;
+}
+
+.sidebar-section h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.sidebar-copy {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Area klik untuk memilih file CSV/TXT. */
+.file-dropzone {
+  display: grid;
+  min-height: 78px;
+  padding: 12px;
+  place-items: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface-strong);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.file-dropzone:hover,
+.file-dropzone:focus-within {
+  border-color: var(--color-accent);
+  background: #2a171b;
+  transform: translateY(-1px);
+}
+
+.file-dropzone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.file-dropzone-title {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.file-dropzone-copy {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 12px;
+}
