@@ -25,15 +25,12 @@ type PanState = {
 
 type CanvasBoardProps = {
   points: CanvasPoint[];
+  hullPoints: CanvasPoint[];
   showStepControls: boolean;
   onPointsChange: (points: CanvasPoint[]) => void;
 };
 
-export function CanvasBoard({
-  points,
-  showStepControls,
-  onPointsChange,
-}: CanvasBoardProps) {
+export function CanvasBoard({points, hullPoints, showStepControls, onPointsChange}: CanvasBoardProps) {
   const [draggingPointId, setDraggingPointId] = useState<number | null>(null);
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -CANVAS_WIDTH / 2,
@@ -62,11 +59,9 @@ export function CanvasBoard({
     return { verticalLines, horizontalLines };
   }, [viewBox]);
 
-  const getCanvasPoint = (
-    svg: SVGSVGElement,
-    clientX: number,
-    clientY: number,
-  ) => {
+  const hullPointIds = useMemo(() => new Set(hullPoints.map((point) => point.id)), [hullPoints])
+  const hullPathPoints = hullPoints.map((point) => `${point.x},${point.y}`).join(" ")
+  const getCanvasPoint = (svg: SVGSVGElement,clientX: number, clientY: number) => {
     const screenCTM = svg.getScreenCTM();
 
     if (!screenCTM) {
@@ -78,34 +73,20 @@ export function CanvasBoard({
     svgPoint.y = clientY;
 
     return svgPoint.matrixTransform(screenCTM.inverse());
-  };
+  }
 
-  const handleCanvasPointerDown = (
-    event: React.PointerEvent<SVGSVGElement>,
-  ) => {
+  const handleCanvasPointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
     if (event.target !== event.currentTarget) {
       return;
     }
 
     event.currentTarget.setPointerCapture(event.pointerId);
-    setPanState({
-      startClientX: event.clientX,
-      startClientY: event.clientY,
-      startViewBoxX: viewBox.x,
-      startViewBoxY: viewBox.y,
-      hasMoved: false,
-    });
-  };
+    setPanState({startClientX: event.clientX, startClientY: event.clientY,startViewBoxX: viewBox.x, startViewBoxY: viewBox.y, hasMoved: false})
+  }
 
-  const handleCanvasPointerMove = (
-    event: React.PointerEvent<SVGSVGElement>,
-  ) => {
+  const handleCanvasPointerMove = (event: React.PointerEvent<SVGSVGElement>,) => {
     if (draggingPointId !== null) {
-      const canvasPoint = getCanvasPoint(
-        event.currentTarget,
-        event.clientX,
-        event.clientY,
-      );
+      const canvasPoint = getCanvasPoint(event.currentTarget,event.clientX,event.clientY);
 
       if (!canvasPoint) {
         return;
@@ -249,9 +230,17 @@ export function CanvasBoard({
           />
         </g>
 
+        {hullPoints.length >= 2 ? (
+          <polygon className="canvas-hull" points={hullPathPoints} />
+        ) : null}
+
         {points.map((point) => (
           <circle
-            className="canvas-point"
+            className={
+              hullPointIds.has(point.id)
+                ? "canvas-point canvas-point-hull"
+                : "canvas-point"
+            }
             key={point.id}
             cx={point.x}
             cy={point.y}
@@ -280,7 +269,11 @@ export function CanvasBoard({
             Hull Edge
           </span>
         </div>
-        <p>Convex Hull output belum dihitung. Area ini siap untuk integrasi algoritma.</p>
+        <p>
+          {hullPoints.length > 0
+            ? `Convex Hull Graham Scan menghasilkan ${hullPoints.length} titik hull.`
+            : "Convex Hull output belum dihitung."}
+        </p>
       </div>
 
       {showStepControls && <PlaybackControls />}

@@ -2,9 +2,17 @@ import type { Algorithm } from "../types";
 
 type InspectorPanelProps = {
   pointCount: number;
+  hullCount: number;
+  runtimeMs: number | null;
 };
 
-export function InspectorPanel({ pointCount }: InspectorPanelProps) {
+export function InspectorPanel({
+  pointCount,
+  hullCount,
+  runtimeMs,
+}: InspectorPanelProps) {
+  const formattedRuntime = runtimeMs === null ? "-" : runtimeMs.toFixed(2);
+
   return (
     <section className="inspector-panel" aria-label="Visualizer inspector">
       <div className="metric-grid">
@@ -14,11 +22,11 @@ export function InspectorPanel({ pointCount }: InspectorPanelProps) {
         </article>
         <article>
           <span>Hull</span>
-          <strong>-</strong>
+          <strong>{hullCount > 0 ? hullCount : "-"}</strong>
         </article>
         <article>
           <span>Runtime</span>
-          <strong>- ms</strong>
+          <strong>{formattedRuntime} ms</strong>
         </article>
       </div>
 
@@ -41,7 +49,7 @@ export function InspectorPanel({ pointCount }: InspectorPanelProps) {
                 <tr key={algorithm}>
                   <td>{algorithm}</td>
                   <td>{pointCount}</td>
-                  <td>-</td>
+                  <td>{algorithm === "Graham Scan" ? formattedRuntime : "-"}</td>
                 </tr>
               ),
             )}
@@ -51,4 +59,3 @@ export function InspectorPanel({ pointCount }: InspectorPanelProps) {
     </section>
   );
 }
-

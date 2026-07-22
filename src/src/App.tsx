@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { grahamScan } from "./algorithm/grahamscan";
 import { CanvasBoard } from "./components/CanvasBoard";
 import { Header } from "./components/Header";
 import { InspectorPanel } from "./components/InspectorPanel";
@@ -11,6 +12,39 @@ function App() {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithm>("Graham Scan");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showStepControls, setShowStepControls] = useState(false);
+  const [hullPoints, setHullPoints] = useState<CanvasPoint[]>([]);
+  const [runtimeMs, setRuntimeMs] = useState<number | null>(null);
+
+  const updatePoints = (nextPoints: CanvasPoint[]) => {
+    setPoints(nextPoints);
+    setHullPoints([]);
+    setRuntimeMs(null);
+    setShowStepControls(false);
+  };
+
+  const handleAlgorithmChange = (algorithm: Algorithm) => {
+    setSelectedAlgorithm(algorithm);
+    setHullPoints([]);
+    setRuntimeMs(null);
+    setShowStepControls(false);
+  };
+
+  const handleStart = () => {
+    setShowStepControls(true);
+
+    if (selectedAlgorithm !== "Graham Scan" || points.length < 3) {
+      setHullPoints([]);
+      setRuntimeMs(null);
+      return;
+    }
+
+    const startTime = performance.now();
+    const computedHull = grahamScan([...points]);
+    const endTime = performance.now();
+
+    setHullPoints(computedHull as CanvasPoint[]);
+    setRuntimeMs(endTime - startTime);
+  };
 
   return (
     <main className="visualizer-page">
@@ -20,19 +54,25 @@ function App() {
         <Sidebar
           selectedAlgorithm={selectedAlgorithm}
           selectedFile={selectedFile}
-          onAlgorithmChange={setSelectedAlgorithm}
+          onAlgorithmChange={handleAlgorithmChange}
           onFileChange={setSelectedFile}
-          onGenerate={setPoints}
-          onStart={() => setShowStepControls(true)}
+          onImportPoints={updatePoints}
+          onGenerate={updatePoints}
+          onStart={handleStart}
         />
 
         <CanvasBoard
           points={points}
+          hullPoints={hullPoints}
           showStepControls={showStepControls}
-          onPointsChange={setPoints}
+          onPointsChange={updatePoints}
         />
 
-        <InspectorPanel pointCount={points.length} />
+        <InspectorPanel
+          pointCount={points.length}
+          hullCount={hullPoints.length}
+          runtimeMs={runtimeMs}
+        />
       </div>
     </main>
   );

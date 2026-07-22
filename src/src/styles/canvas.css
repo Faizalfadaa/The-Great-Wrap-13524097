@@ -64,6 +64,14 @@
   stroke-width: 2;
 }
 
+.canvas-hull {
+  fill: rgba(255, 209, 102, 0.08);
+  stroke: var(--color-hull);
+  stroke-linejoin: round;
+  stroke-width: 4;
+  pointer-events: none;
+}
+
 .canvas-point {
   fill: var(--color-point);
   stroke: var(--color-point-stroke);
@@ -77,6 +85,11 @@
 .canvas-point:hover {
   r: 9;
   stroke-width: 3;
+}
+
+.canvas-point-hull {
+  fill: var(--color-hull);
+  stroke: var(--color-point-stroke);
 }
 
 .canvas-footer {
