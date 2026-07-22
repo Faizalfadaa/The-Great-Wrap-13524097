@@ -4,14 +4,13 @@ type InspectorPanelProps = {
   pointCount: number;
   hullCount: number;
   runtimeMs: number | null;
+  benchmarkResults: Record<Algorithm, number | null>;
 };
 
-export function InspectorPanel({
-  pointCount,
-  hullCount,
-  runtimeMs,
-}: InspectorPanelProps) {
+export function InspectorPanel({pointCount, hullCount, runtimeMs, benchmarkResults}: InspectorPanelProps) {
   const formattedRuntime = runtimeMs === null ? "-" : runtimeMs.toFixed(2);
+  const formatRuntime = (runtime: number | null) =>
+    runtime === null ? "-" : `${runtime.toFixed(2)} ms`;
 
   return (
     <section className="inspector-panel" aria-label="Visualizer inspector">
@@ -49,7 +48,7 @@ export function InspectorPanel({
                 <tr key={algorithm}>
                   <td>{algorithm}</td>
                   <td>{pointCount}</td>
-                  <td>{algorithm === "Graham Scan" ? formattedRuntime : "-"}</td>
+                  <td>{formatRuntime(benchmarkResults[algorithm])}</td>
                 </tr>
               ),
             )}
