@@ -1,11 +1,40 @@
 /* Sidebar kiri untuk input dataset dan kontrol algoritma. */
 .input-sidebar {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 14px;
   padding: 16px;
   min-height: 0;
   overflow: auto;
+}
+
+.sidebar-lock-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-sidebar-locked .sidebar-lock-content {
+  filter: blur(2px);
+  opacity: 0.46;
+  pointer-events: none;
+  user-select: none;
+}
+
+.input-sidebar-locked::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(16, 9, 11, 0.36);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .sidebar-section,

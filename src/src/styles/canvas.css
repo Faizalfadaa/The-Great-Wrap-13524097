@@ -49,6 +49,10 @@
   touch-action: none;
 }
 
+.visualization-board-locked .visualization-canvas {
+  cursor: not-allowed;
+}
+
 .canvas-grid,
 .canvas-axis {
   pointer-events: none;
@@ -109,6 +113,10 @@
   transition:
     r 120ms ease,
     stroke-width 120ms ease;
+}
+
+.visualization-board-locked .canvas-point {
+  cursor: not-allowed;
 }
 
 .canvas-point:hover {

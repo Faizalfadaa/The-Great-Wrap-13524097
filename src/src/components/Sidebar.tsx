@@ -7,6 +7,7 @@ import { FileUpload } from "./FileUpload";
 type SidebarProps = {
   selectedAlgorithm: Algorithm;
   selectedFile: File | null;
+  isLocked: boolean;
   onAlgorithmChange: (algorithm: Algorithm) => void;
   onFileChange: (file: File | null) => void;
   onImportPoints: (points: Point[]) => void;
@@ -14,25 +15,31 @@ type SidebarProps = {
   onStart: () => void;
 };
 
-export function Sidebar({selectedAlgorithm, selectedFile, onAlgorithmChange, onFileChange, onImportPoints, onGenerate, onStart }: SidebarProps) {
+export function Sidebar({selectedAlgorithm, selectedFile, isLocked, onAlgorithmChange, onFileChange, onImportPoints, onGenerate, onStart }: SidebarProps) {
   return (
-    <aside className="input-sidebar" aria-label="Visualizer controls">
-      <FileUpload
-        selectedFile={selectedFile}
-        onFileChange={onFileChange}
-        onImportPoints={onImportPoints}
-      />
-      <AlgorithmSelector
-        selectedAlgorithm={selectedAlgorithm}
-        onAlgorithmChange={onAlgorithmChange}
-      />
-      <DatasetGenerator onGenerate={onGenerate} />
+    <aside
+      className={`input-sidebar ${isLocked ? "input-sidebar-locked" : ""}`}
+      aria-disabled={isLocked}
+      aria-label="Visualizer controls"
+    >
+      <div className="sidebar-lock-content">
+        <FileUpload
+          selectedFile={selectedFile}
+          onFileChange={onFileChange}
+          onImportPoints={onImportPoints}
+        />
+        <AlgorithmSelector
+          selectedAlgorithm={selectedAlgorithm}
+          onAlgorithmChange={onAlgorithmChange}
+        />
+        <DatasetGenerator onGenerate={onGenerate} />
 
-      <section className="control-section">
-        <button className="start-button" type="button" onClick={onStart}>
-          Start
-        </button>
-      </section>
+        <section className="control-section">
+          <button className="start-button" type="button" onClick={onStart}>
+            Start
+          </button>
+        </section>
+      </div>
     </aside>
   );
 }

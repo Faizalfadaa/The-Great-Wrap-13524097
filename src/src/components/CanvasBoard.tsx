@@ -20,6 +20,7 @@ type CanvasBoardProps = {
   animationStep: Step | null;
   selectedAlgorithm: Algorithm;
   showStepControls: boolean;
+  isLocked: boolean;
   onPointsChange: (points: Point[]) => void;
   onClear: () => void;
   onPlay: () => void;
@@ -38,6 +39,7 @@ export function CanvasBoard({
   animationStep,
   selectedAlgorithm,
   showStepControls,
+  isLocked,
   onPointsChange,
   onClear,
   onPlay,
@@ -98,6 +100,10 @@ export function CanvasBoard({
   }
 
   const handleCanvasPointerUp = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (isLocked) {
+      return;
+    }
+
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -114,15 +120,23 @@ export function CanvasBoard({
   };
 
   const clearCanvas = () => {
+    if (isLocked) {
+      return;
+    }
+
     onClear()
   }
 
   const deletePoint = (pointToDelete: Point) => {
+    if (isLocked) {
+      return;
+    }
+
     onPointsChange(points.filter((point) => point !== pointToDelete))
   }
 
   return (
-    <section className="visualization-board">
+    <section className={`visualization-board ${isLocked ? "visualization-board-locked" : ""}`}>
       <p className="canvas-instruction">
         Click canvas to insert point |
         Click point to delete
@@ -131,7 +145,7 @@ export function CanvasBoard({
       <div className="canvas-toolbar" aria-label="Canvas actions">
         <button
           type="button"
-          disabled={points.length === 0}
+          disabled={points.length === 0 || isLocked}
           onPointerDown={(event) => event.stopPropagation()}
           onClick={clearCanvas}
         >
