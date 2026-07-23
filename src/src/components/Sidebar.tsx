@@ -28,11 +28,11 @@ export function Sidebar({selectedAlgorithm, selectedFile, isLocked, onAlgorithmC
           onFileChange={onFileChange}
           onImportPoints={onImportPoints}
         />
+        <DatasetGenerator onGenerate={onGenerate} />
         <AlgorithmSelector
           selectedAlgorithm={selectedAlgorithm}
           onAlgorithmChange={onAlgorithmChange}
         />
-        <DatasetGenerator onGenerate={onGenerate} />
 
         <section className="control-section">
           <button className="start-button" type="button" onClick={onStart}>
