@@ -1,7 +1,23 @@
 import { Point, pointToLine } from "./point";
 import { StepPhase, type Step } from "../types";
 
-export function quickHull(list: Point[]): Step[] {
+export function quickHull(points: Point[]): Step[] {
+    // Remove duplicate points
+    let list: Point[] = []
+    for (const point of points) {
+        let isDuplicate: boolean = false
+        for(let i = 0; i < list.length; i++) {
+            if(list[i].x === point.x && list[i].y === point.y) {
+                isDuplicate = true
+                break
+            }
+        }
+
+        if (!isDuplicate) {
+            list.push(point)
+        }
+    }
+
     // Return if there is only 1 point
     if (list.length <= 1) {
         return [
@@ -21,7 +37,7 @@ export function quickHull(list: Point[]): Step[] {
                 phase: StepPhase.COMPLETE,
                 message: "[COMPLETE] Hull Finished",
                 hullPoints: list,
-                persistentLines: list.length === 2 ? [[list[0], list[1]]] : []
+                persistentLines: []
             }
         ]
     }

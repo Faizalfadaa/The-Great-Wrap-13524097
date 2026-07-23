@@ -2,9 +2,37 @@ import { angle, distance, orientation, Point } from "./point";
 import { StepPhase, type Step } from "../types";
 
 // Graham Scan Algorithm
-export function grahamScan(list: Point[]) : Step[] {
+export function grahamScan(points: Point[]) : Step[] {
+    // Remove duplicate points
+    let list: Point[] = []
+    for (const point of points) {
+        let isDuplicate: boolean = false
+        for(let i = 0; i < list.length; i++) {
+            if(list[i].x === point.x && list[i].y === point.y) {
+                isDuplicate = true
+                break
+            }
+        }
+
+        if (!isDuplicate) {
+            list.push(point)
+        }
+    }
+
     // Finish if there are only one Point
     if (list.length <= 1) {
+        return [
+            {
+                phase: StepPhase.COMPLETE,
+                message: "[COMPLETE] Hull Finished",
+                hullPoints: list,
+                persistentLines: [],
+            },
+        ]
+    }
+
+    // Finish if there are only two Points
+    if (list.length <= 2) {
         return [
             {
                 phase: StepPhase.COMPLETE,
