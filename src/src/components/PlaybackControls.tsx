@@ -1,3 +1,4 @@
+// Initialize properties for playback controls component
 type PlaybackControlsProps = {
   currentStepIndex: number;
   isPlaying: boolean;
@@ -7,26 +8,24 @@ type PlaybackControlsProps = {
   onNext: () => void;
   onPrevious: () => void;
   onStop: () => void;
-};
+}
 
-export function PlaybackControls({
-  currentStepIndex,
-  isPlaying,
-  totalSteps,
-  onPlay,
-  onPause,
-  onNext,
-  onPrevious,
-  onStop,
-}: PlaybackControlsProps) {
-  const isAtStart = currentStepIndex === 0;
-  const isAtEnd = totalSteps === 0 || currentStepIndex >= totalSteps - 1;
+// Render playback control section
+export function PlaybackControls({ currentStepIndex, isPlaying, totalSteps, onPlay, onPause, onNext, onPrevious, onStop}: PlaybackControlsProps) {
+  // Disable previous button at first step
+  const isAtStart = currentStepIndex === 0
+
+  // Disable next button at final step
+  const isAtEnd = totalSteps === 0 || currentStepIndex >= totalSteps - 1
 
   return (
     <div
       className="playback-controls"
       aria-label="Step-by-step visualization controls"
     >
+
+      {/* Playback controls for stepping through algorithm animation */}
+      {/* Toggle play and pause */}
       <button
         type="button"
         title={isPlaying ? "Pause" : "Play"}
@@ -39,6 +38,8 @@ export function PlaybackControls({
           aria-hidden="true"
         />
       </button>
+
+      {/* Move to previous animation step */}
       <button
         type="button"
         title="Previous Step"
@@ -48,6 +49,8 @@ export function PlaybackControls({
       >
         <span className="control-icon previous-icon" aria-hidden="true" />
       </button>
+
+      {/* Move to next animation step */}
       <button
         type="button"
         title="Next Step"
@@ -57,12 +60,16 @@ export function PlaybackControls({
       >
         <span className="control-icon next-icon" aria-hidden="true" />
       </button>
+
+      {/* Stop animation and unlock the canvas and sidebar */}
       <button type="button" title="Stop" aria-label="Stop" onClick={onStop}>
         <span className="control-icon stop-icon" aria-hidden="true" />
       </button>
+
+      {/* Create step counter */}
       <span className="step-counter">
         {totalSteps > 0 ? `${currentStepIndex + 1}/${totalSteps}` : "0/0"}
       </span>
     </div>
-  );
+  )
 }

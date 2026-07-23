@@ -2,15 +2,19 @@ import { useState } from "react";
 import { readFile } from "../algorithm/input";
 import type { Point } from "../algorithm/point";
 
+// Initialize properties for FileUpload component
 type FileUploadProps = {
   selectedFile: File | null;
   onFileChange: (file: File | null) => void;
   onImportPoints: (points: Point[]) => void;
-};
+}
 
+// Render File upload section
 export function FileUpload({selectedFile,onFileChange,onImportPoints}: FileUploadProps) {
+  // Store validation error for uploaded dataset file
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  // Read selected file and convert it into Point list
   async function handleFileChange(file: File | null) {
     onFileChange(file);
     setErrorMessage(null);
@@ -33,12 +37,15 @@ export function FileUpload({selectedFile,onFileChange,onImportPoints}: FileUploa
 
   return (
     <section className="sidebar-section">
+
+      {/* File upload title and instructions*/}
       <p className="sidebar-label">Input Dataset</p>
       <h2>Upload File</h2>
       <p className="sidebar-copy">
         Accept CSV or TXT files containing point coordinates for visualization
       </p>
 
+      {/* Create dropzone style for file upload */}
       <label className="file-dropzone" htmlFor="point-file">
         {selectedFile ? (
           <>
@@ -60,6 +67,8 @@ export function FileUpload({selectedFile,onFileChange,onImportPoints}: FileUploa
           onChange={(event) => handleFileChange(event.target.files?.[0] ?? null)}
         />
       </label>
+
+      {/* Create error message appears when file content cannot be parsed */}
       {errorMessage ? <p className="file-error">{errorMessage}</p> : null}
     </section>
   );
