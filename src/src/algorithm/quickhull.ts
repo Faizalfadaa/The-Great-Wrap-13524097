@@ -58,6 +58,38 @@ export function quickHull(points: Point[]): Step[] {
         }
     }
 
+    // If all points have the same X, the hull is the lowest and highest point
+    if (minPoint === maxPoint) {
+        let minYPoint: Point = list[0]
+        let maxYPoint: Point = list[0]
+
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].y < minYPoint.y) {
+                minYPoint = list[i]
+            }
+
+            if (list[i].y > maxYPoint.y) {
+                maxYPoint = list[i]
+            }
+        }
+
+        return [
+            {
+                phase: StepPhase.SELECT_START,
+                message: "[START] All points have same X. Choose Y minimum and Y maximum",
+                hullPoints: [minYPoint, maxYPoint],
+                persistentLines: [[minYPoint, maxYPoint]],
+                currentPoint: minYPoint
+            },
+            {
+                phase: StepPhase.COMPLETE,
+                message: "[COMPLETE] Convex Hull completed",
+                hullPoints: [minYPoint, maxYPoint],
+                persistentLines: [],
+            }
+        ]
+    }
+
     // Remove minPoint and maxPoint from the list
     let newList: Point[] = list.filter(item => item !== maxPoint && item !== minPoint)
 

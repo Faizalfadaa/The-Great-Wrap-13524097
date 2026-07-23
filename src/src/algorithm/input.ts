@@ -6,7 +6,7 @@ export function inputFile(input: string): Point[] {
     let lines = input.split("\n").map((line) => line.trim()).filter((line) => line.length > 0)
     
     for (let line of lines) {
-        let coordinates = line.split(/\s+/)
+        let coordinates = line.split(/[,\s]+/)
 
         if (coordinates.length != 2) {
             throw new Error("[ERROR] Format tidak valid")
