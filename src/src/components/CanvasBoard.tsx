@@ -92,6 +92,7 @@ export function CanvasBoard({
   const selectedPointRefs = useMemo(() => new Set(persistentLines.map((line) => line[1])), [persistentLines])
   const sortingStartPoint = persistentLines[0]?.[0] ?? null
   const currentPoint = animationStep?.currentPoint ?? null
+  const shouldDrawProcessChain = selectedAlgorithm !== "QuickHull"
 
   useEffect(() => {
     if (points.length === 0) {
@@ -280,7 +281,7 @@ export function CanvasBoard({
           <polygon className="canvas-hull" points={hullPathPoints} />
         ) : null}
 
-        {hullPoints.length >= 2 && animationStep?.phase !== StepPhase.COMPLETE ? (
+        {shouldDrawProcessChain && hullPoints.length >= 2 && animationStep?.phase !== StepPhase.COMPLETE ? (
           <polyline className="canvas-hull-chain" points={hullPathPoints} />
         ) : null}
 
@@ -298,7 +299,7 @@ export function CanvasBoard({
           </g>
         ) : null}
 
-        {animationStep?.phase !== StepPhase.SORT && hullPoints.length > 0 && currentPoint ? (
+        {selectedAlgorithm !== "QuickHull" && animationStep?.phase !== StepPhase.SORT && hullPoints.length > 0 && currentPoint ? (
           <line
             className="canvas-candidate-edge"
             x1={hullPoints[hullPoints.length - 1].x}
