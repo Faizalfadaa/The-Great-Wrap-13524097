@@ -9,8 +9,8 @@ export function quickHull(list: Point[]): Step[] {
                 phase: StepPhase.COMPLETE,
                 message: "[COMPLETE] Hull Finished",
                 hullPoints: list,
-                persistentLines: [],
-            },
+                persistentLines: []
+            }
         ]
     }
 
@@ -21,8 +21,8 @@ export function quickHull(list: Point[]): Step[] {
                 phase: StepPhase.COMPLETE,
                 message: "[COMPLETE] Hull Finished",
                 hullPoints: list,
-                persistentLines: list.length === 2 ? [[list[0], list[1]]] : [],
-            },
+                persistentLines: list.length === 2 ? [[list[0], list[1]]] : []
+            }
         ]
     }
 
@@ -58,9 +58,9 @@ export function quickHull(list: Point[]): Step[] {
     ]
 
     // Find hull for each segments
-    let s1Hull: Point[] = findHull(s1, minPoint, maxPoint, steps, [minPoint, maxPoint])
-    let s2Hull: Point[] = findHull(s2, maxPoint, minPoint, steps, [minPoint, maxPoint, ...s1Hull])
-    let result: Point[] = [...s1Hull, ...s2Hull]
+    let s1Hull: Point[] = findHull(s1, minPoint, maxPoint, steps, [minPoint, maxPoint], "above")
+    let s2Hull: Point[] = findHull(s2, maxPoint, minPoint, steps, [minPoint, ...s1Hull, maxPoint], "below")
+    let result: Point[] = [minPoint, ...s1Hull, maxPoint, ...s2Hull]
 
     steps.push({
         phase: StepPhase.COMPLETE,
@@ -72,31 +72,29 @@ export function quickHull(list: Point[]): Step[] {
     return steps
 }
 
-function findHull(list: Point[], line1: Point, line2: Point, steps: Step[], hullPoints: Point[]): Point[] {
-    // If there are no points, add the first point
+function findHull(list: Point[], point1: Point, point2: Point, steps: Step[], hullPoints: Point[], side: string): Point[] {
+    // Return if there are no points outside the line
     if (list.length === 0) {
         steps.push({
-            phase: StepPhase.ACCEPT,
-            message: "[ACCEPT] Add line endpoint to hull",
-            hullPoints: [...hullPoints, line1],
-            persistentLines: [[line1, line2]],
-            currentPoint: line1
+            phase: StepPhase.CHECK,
+            message: "[CHECK] No point outside this line",
+            hullPoints,
+            persistentLines: [[point1, point2]],
         })
 
-        return [line1]
+        return []
     }
 
     // Find the furthest point from the line
     let furthestPoint: Point = list[0]
-    let furthestDistance: number = pointToLine(furthestPoint, [line1, line2])
-
-    for (let i = 1; i < list.length; i++) {
-        let currentDistance: number = pointToLine(list[i], [line1, line2])
+    let furthestDistance: number = pointToLine(furthestPoint, [point1, point2])
+    for (let i = 0; i < list.length; i++) {
+        let currentDistance: number = pointToLine(list[i], [point1, point2])
         steps.push({
             phase: StepPhase.CHECK,
             message: "[CHECK] Find furthest point from line",
             hullPoints,
-            persistentLines: [[line1, line2]],
+            persistentLines: [[point1, point2]],
             currentPoint: list[i]
         })
 
@@ -110,7 +108,7 @@ function findHull(list: Point[], line1: Point, line2: Point, steps: Step[], hull
         phase: StepPhase.ACCEPT,
         message: "[ACCEPT] Select furthest point",
         hullPoints: [...hullPoints, furthestPoint],
-        persistentLines: [[line1, furthestPoint], [furthestPoint, line2]],
+        persistentLines: [[point1, furthestPoint], [furthestPoint, point2]],
         currentPoint: furthestPoint
     })
 
@@ -118,14 +116,24 @@ function findHull(list: Point[], line1: Point, line2: Point, steps: Step[], hull
     let newList: Point[] = list.filter(point => point !== furthestPoint)
 
     // Divide into smaller segments
-    let [s1] = createSegment(line1, furthestPoint, newList)
-    let [s2] = createSegment(furthestPoint, line2, newList)
+    let [point1Above, point1Below] = createSegment(point1, furthestPoint, newList)
+    let [point2Above, point2Below] = createSegment(furthestPoint, point2, newList)
+
+    let s1: Point[] = []
+    let s2: Point[] = []
+    if (side === "above") {
+        s1 = point1Above
+        s2 = point2Above
+    } else {
+        s1 = point1Below
+        s2 = point2Below
+    }
 
     // Recursively find each hull for each segments
-    let s1Hull: Point[] = findHull(s1, line1, furthestPoint, steps, [...hullPoints, furthestPoint])
-    let s2Hull: Point[] = findHull(s2, furthestPoint, line2, steps, [...hullPoints, furthestPoint, ...s1Hull])
+    let s1Hull: Point[] = findHull(s1, point1, furthestPoint, steps, [...hullPoints, furthestPoint], side)
+    let s2Hull: Point[] = findHull(s2, furthestPoint, point2, steps, [...hullPoints, ...s1Hull, furthestPoint], side)
 
-    return [...s1Hull, ...s2Hull]
+    return [...s1Hull, furthestPoint, ...s2Hull]
 }
 
 // Create segments of point divided by the line
