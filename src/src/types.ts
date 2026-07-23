@@ -2,7 +2,7 @@ import type { Point } from "./algorithm/point";
 
 // Process Algorithm types
 export type Algorithm = "Graham Scan" | "Jarvis March" | "QuickHull";
-export type GeneratorShape = "Random" | "Circle" | "Rectangle" | "Cluster";
+export type GeneratorShape = "Random" | "Triangle" | "Rectangle" | "Cluster";
 
 // Step phases for each algorithm
 export enum StepPhase {
