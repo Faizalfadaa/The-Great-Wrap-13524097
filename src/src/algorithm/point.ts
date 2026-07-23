@@ -19,6 +19,13 @@ export function distance(p1: Point, p2: Point) : number {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2))
 }   
 
+// Find distance from point p to line
+export function pointToLine(p: Point, line: Point[]) : number {
+    const p1 = line[0]
+    const p2 = line[1]
+    return Math.abs((p.y - p1.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p.x - p1.x))
+}
+
 // Get the orientation from 3 points
 export function orientation(p1: Point, p2: Point, p3: Point) : number {
     let d : number = (p3.y - p2.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p3.x - p2.x)
