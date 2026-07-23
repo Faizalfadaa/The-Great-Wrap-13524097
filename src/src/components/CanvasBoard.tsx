@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { createPoint, type Point } from "../algorithm/point";
 import { StepPhase, type Algorithm, type Step } from "../types";
 import { PlaybackControls } from "./PlaybackControls";
@@ -6,21 +6,12 @@ import { PlaybackControls } from "./PlaybackControls";
 const CANVAS_WIDTH = 1200;
 const CANVAS_HEIGHT = 700;
 const GRID_SIZE = 50;
-const PAN_THRESHOLD = 4;
 
 type ViewBox = {
   x: number;
   y: number;
   width: number;
   height: number;
-};
-
-type PanState = {
-  startClientX: number;
-  startClientY: number;
-  startViewBoxX: number;
-  startViewBoxY: number;
-  hasMoved: boolean;
 };
 
 type CanvasBoardProps = {
@@ -58,14 +49,12 @@ export function CanvasBoard({
   currentStepIndex,
   totalSteps,
 }: CanvasBoardProps) {
-  const [draggingPointIndex, setDraggingPointIndex] = useState<number | null>(null);
-  const [viewBox, setViewBox] = useState<ViewBox>({
+  const [viewBox] = useState<ViewBox>({
     x: -CANVAS_WIDTH / 2,
     y: -CANVAS_HEIGHT / 2,
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
   });
-  const [panState, setPanState] = useState<PanState | null>(null);
 
   const gridLines = useMemo(() => {
     const verticalLines: number[] = [];
@@ -94,13 +83,6 @@ export function CanvasBoard({
   const currentPoint = animationStep?.currentPoint ?? null
   const shouldDrawProcessChain = selectedAlgorithm !== "QuickHull"
 
-  useEffect(() => {
-    if (points.length === 0) {
-      setPanState(null)
-      setDraggingPointIndex(null)
-    }
-  }, [points.length])
-
   const getCanvasPoint = (svg: SVGSVGElement,clientX: number, clientY: number) => {
     const screenCTM = svg.getScreenCTM();
 
@@ -115,107 +97,38 @@ export function CanvasBoard({
     return svgPoint.matrixTransform(screenCTM.inverse());
   }
 
-  const handleCanvasPointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
+  const handleCanvasPointerUp = (event: React.PointerEvent<SVGSVGElement>) => {
     if (event.target !== event.currentTarget) {
       return;
     }
 
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setPanState({startClientX: event.clientX, startClientY: event.clientY,startViewBoxX: viewBox.x, startViewBoxY: viewBox.y, hasMoved: false})
-  }
+    const canvasPoint = getCanvasPoint(
+      event.currentTarget,
+      event.clientX,
+      event.clientY,
+    );
 
-  const handleCanvasPointerMove = (event: React.PointerEvent<SVGSVGElement>,) => {
-    if (draggingPointIndex !== null) {
-      const canvasPoint = getCanvasPoint(event.currentTarget,event.clientX,event.clientY);
-
-      if (!canvasPoint) {
-        return;
-      }
-
-      onPointsChange(
-        points.map((point) =>
-          point === points[draggingPointIndex]
-            ? createPoint(canvasPoint.x, -canvasPoint.y)
-            : point,
-        ),
-      );
-      return;
+    if (canvasPoint) {
+      onPointsChange([...points, createPoint(canvasPoint.x, -canvasPoint.y)]);
     }
-
-    if (!panState) {
-      return;
-    }
-
-    const svgRect = event.currentTarget.getBoundingClientRect();
-    const clientDeltaX = event.clientX - panState.startClientX;
-    const clientDeltaY = event.clientY - panState.startClientY;
-    const hasMoved =
-      panState.hasMoved ||
-      Math.hypot(clientDeltaX, clientDeltaY) > PAN_THRESHOLD;
-
-    if (!hasMoved) {
-      return;
-    }
-
-    setViewBox((currentViewBox) => ({
-      ...currentViewBox,
-      x:
-        panState.startViewBoxX -
-        (clientDeltaX * currentViewBox.width) / svgRect.width,
-      y:
-        panState.startViewBoxY -
-        (clientDeltaY * currentViewBox.height) / svgRect.height,
-    }));
-
-    if (hasMoved !== panState.hasMoved) {
-      setPanState((currentPanState) =>
-        currentPanState ? { ...currentPanState, hasMoved } : null,
-      );
-    }
-  };
-
-  const handleCanvasPointerUp = (event: React.PointerEvent<SVGSVGElement>) => {
-    if (panState && !panState.hasMoved) {
-      const canvasPoint = getCanvasPoint(
-        event.currentTarget,
-        event.clientX,
-        event.clientY,
-      );
-
-      if (canvasPoint) {
-        onPointsChange([...points, createPoint(canvasPoint.x, -canvasPoint.y)]);
-      }
-    }
-
-    setPanState(null);
-    setDraggingPointIndex(null);
-  };
-
-  const resetView = () => {
-    setViewBox({
-      x: -CANVAS_WIDTH / 2,
-      y: -CANVAS_HEIGHT / 2,
-      width: CANVAS_WIDTH,
-      height: CANVAS_HEIGHT,
-    });
   };
 
   const clearCanvas = () => {
-    setPanState(null)
-    setDraggingPointIndex(null)
     onClear()
+  }
+
+  const deletePoint = (pointToDelete: Point) => {
+    onPointsChange(points.filter((point) => point !== pointToDelete))
   }
 
   return (
     <section className="visualization-board">
       <p className="canvas-instruction">
-        Klik canvas untuk menambah titik.
+        Click canvas to insert point |
+        Click point to delete
       </p>
 
       <div className="canvas-toolbar" aria-label="Canvas actions">
-        <button type="button" onClick={resetView}>
-          Reset View
-        </button>
         <button
           type="button"
           disabled={points.length === 0}
@@ -232,13 +145,7 @@ export function CanvasBoard({
         preserveAspectRatio="none"
         role="img"
         aria-label="Convex hull visualization board"
-        onPointerDown={handleCanvasPointerDown}
-        onPointerMove={handleCanvasPointerMove}
         onPointerUp={handleCanvasPointerUp}
-        onPointerLeave={() => {
-          setPanState(null);
-          setDraggingPointIndex(null);
-        }}
       >
         <g className="canvas-grid">
           {gridLines.verticalLines.map((x) => (
@@ -326,11 +233,7 @@ export function CanvasBoard({
             cx={point.x}
             cy={-point.y}
             r="7"
-            onPointerDown={(event) => {
-              event.stopPropagation();
-              event.currentTarget.setPointerCapture(event.pointerId);
-              setDraggingPointIndex(index);
-            }}
+            onClick={() => deletePoint(point)}
           />
         ))}
       </svg>
@@ -354,8 +257,8 @@ export function CanvasBoard({
           {animationStep
             ? animationStep.message
             : hullPoints.length > 0
-            ? `Convex Hull ${selectedAlgorithm} menghasilkan ${hullPoints.length} titik hull.`
-            : "Convex Hull output belum dihitung."}
+            ? `Convex Hull ${selectedAlgorithm} created ${hullPoints.length} hull points`
+            : ""}
         </p>
       </div>
 

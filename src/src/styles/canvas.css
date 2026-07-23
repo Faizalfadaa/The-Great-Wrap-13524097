@@ -18,8 +18,8 @@
 
 .canvas-toolbar {
   position: absolute;
-  top: 28px;
-  right: 28px;
+  top: 8px;
+  right: 16px;
   z-index: 1;
   display: flex;
   gap: 8px;
@@ -45,7 +45,7 @@
   border: 1px solid var(--color-canvas-border);
   border-radius: 8px;
   background-color: var(--color-canvas-bg);
-  cursor: grab;
+  cursor: crosshair;
   touch-action: none;
 }
 
@@ -105,7 +105,7 @@
   fill: var(--color-point);
   stroke: var(--color-point-stroke);
   stroke-width: 2;
-  cursor: grab;
+  cursor: pointer;
   transition:
     r 120ms ease,
     stroke-width 120ms ease;
