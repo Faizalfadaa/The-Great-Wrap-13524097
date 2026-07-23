@@ -1,19 +1,21 @@
-import type { Algorithm } from "../types";
+import type { Algorithm, Step } from "../types";
 
 type InspectorPanelProps = {
   pointCount: number;
   hullCount: number;
   runtimeMs: number | null;
   benchmarkResults: Record<Algorithm, number | null>;
+  animationStep: Step | null;
 };
 
-export function InspectorPanel({pointCount, hullCount, runtimeMs, benchmarkResults}: InspectorPanelProps) {
-  const formattedRuntime = runtimeMs === null ? "-" : runtimeMs.toFixed(2);
+export function InspectorPanel({pointCount, hullCount, runtimeMs, benchmarkResults, animationStep}: InspectorPanelProps) {
+  const formattedRuntime = runtimeMs === null ? "-" : runtimeMs;
   const formatRuntime = (runtime: number | null) =>
-    runtime === null ? "-" : `${runtime.toFixed(2)} ms`;
+    runtime === null ? "-" : `${runtime} ms`;
 
   return (
     <section className="inspector-panel" aria-label="Visualizer inspector">
+      <p className="sidebar-label">Algorithm Statistics</p>
       <div className="metric-grid">
         <article>
           <span>Points</span>
@@ -31,8 +33,7 @@ export function InspectorPanel({pointCount, hullCount, runtimeMs, benchmarkResul
 
       <div className="table-panel">
         <div className="panel-heading">
-          <p className="sidebar-label">Benchmark</p>
-          <span>UI placeholder</span>
+          <p className="sidebar-label">Benchmark Algorithm</p>
         </div>
         <table>
           <thead>
@@ -54,6 +55,13 @@ export function InspectorPanel({pointCount, hullCount, runtimeMs, benchmarkResul
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="logger-panel">
+        <p className="sidebar-label">Logger</p>
+        <div className="logger-output">
+          {animationStep ? animationStep.message : "No algorithm process running"}
+        </div>
       </div>
     </section>
   );

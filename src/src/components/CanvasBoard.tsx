@@ -267,13 +267,6 @@ export function CanvasBoard({
             Hull Edge
           </span>
         </div>
-        <p>
-          {animationStep
-            ? animationStep.message
-            : hullPoints.length > 0
-            ? `Convex Hull ${selectedAlgorithm} created ${hullPoints.length} hull points`
-            : ""}
-        </p>
       </div>
 
       {showStepControls && (
