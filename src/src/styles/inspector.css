@@ -1,4 +1,4 @@
-/* Panel kanan untuk ringkasan visualisasi dan benchmark. */
+/* Right panel for inspector panel */
 .inspector-panel {
   display: flex;
   flex-direction: column;
@@ -8,11 +8,13 @@
   overflow: auto;
 }
 
+/* Vertical grid for summary metric cards */
 .metric-grid {
   display: grid;
   gap: 10px;
 }
 
+/* Individual metric card */
 .metric-grid article {
   display: grid;
   gap: 4px;
@@ -22,27 +24,32 @@
   background: var(--color-surface-strong);
 }
 
+/* Metric label text */
 .metric-grid span {
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 800;
 }
 
+/* Metric value text */
 .metric-grid strong {
   color: var(--color-text);
   font-size: 22px;
 }
 
+/* Benchmark algorithm table */
 .table-panel {
   display: grid;
   gap: 10px;
 }
 
+/* Logger section */
 .logger-panel {
   display: grid;
   gap: 10px;
 }
 
+/* Algorithm step message box */
 .logger-output {
   min-height: 42px;
   padding: 12px;
@@ -56,19 +63,7 @@
   line-height: 1.45;
 }
 
-.panel-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.panel-heading span {
-  color: var(--color-muted);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
+/* Benchmark table style */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -78,6 +73,7 @@ table {
   font-size: 12px;
 }
 
+/* Benchmark table cells */
 th,
 td {
   padding: 10px 8px;
@@ -86,11 +82,13 @@ td {
   text-align: left;
 }
 
+/* Benchmark table header row */
 th {
   color: var(--color-text);
   background: var(--color-surface-strong);
 }
 
+/* Remove last row divider from benchmark table */
 tr:last-child td {
   border-bottom: 0;
 }

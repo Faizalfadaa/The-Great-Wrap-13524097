@@ -1,4 +1,4 @@
-/* Board utama tempat canvas dan toolbar berada. */
+/* Main board and toolbar */
 .visualization-board {
   position: relative;
   display: grid;
@@ -9,6 +9,7 @@
   overflow: hidden;
 }
 
+/* Instruction text above the SVG canvas */
 .canvas-instruction {
   margin: 0;
   color: var(--color-muted);
@@ -16,6 +17,7 @@
   font-weight: 800;
 }
 
+/* Top right canvas action toolbar */
 .canvas-toolbar {
   position: absolute;
   top: 8px;
@@ -25,6 +27,7 @@
   gap: 8px;
 }
 
+/* Canvas toolbar button sizing */
 .canvas-toolbar button {
   min-height: 32px;
   padding: 0 12px;
@@ -32,11 +35,13 @@
   font-size: 12px;
 }
 
+/* Disabled Clear button state */
 .canvas-toolbar button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
 }
 
+/* Main canvas surface */
 .visualization-canvas {
   display: block;
   width: 100%;
@@ -49,25 +54,25 @@
   touch-action: none;
 }
 
-.visualization-board-locked .visualization-canvas {
-  cursor: not-allowed;
-}
-
+/* Make grid and axis should not capture pointer events */
 .canvas-grid,
 .canvas-axis {
   pointer-events: none;
 }
 
+/* Grid line canvas style */
 .canvas-grid line {
   stroke: var(--color-canvas-grid);
   stroke-width: 1;
 }
 
+/* Axis corodinate line style */
 .canvas-axis line {
   stroke: var(--color-canvas-axis);
   stroke-width: 2;
 }
 
+/* Final filled convex hull */
 .canvas-hull {
   fill: rgba(255, 209, 102, 0.08);
   stroke: var(--color-hull);
@@ -76,6 +81,7 @@
   pointer-events: none;
 }
 
+/* Temporary hull chain before final polygon is complete */
 .canvas-hull-chain {
   fill: none;
   stroke: var(--color-hull);
@@ -85,6 +91,7 @@
   pointer-events: none;
 }
 
+/* Candidate edge used during checking steps */
 .canvas-candidate-edge {
   stroke: #73d2de;
   stroke-dasharray: 10 8;
@@ -93,10 +100,12 @@
   pointer-events: none;
 }
 
+/* Group wrapper for persistent process lines */
 .canvas-sorting-lines {
   pointer-events: none;
 }
 
+/* Persistent process line style */
 .canvas-sorting-lines line {
   stroke: #1aa6b7;
   stroke-dasharray: 12 9;
@@ -105,6 +114,7 @@
   opacity: 0.82;
 }
 
+/* Default point style */
 .canvas-point {
   fill: var(--color-point);
   stroke: var(--color-point-stroke);
@@ -115,56 +125,45 @@
     stroke-width 120ms ease;
 }
 
-.visualization-board-locked .canvas-point {
-  cursor: not-allowed;
-}
-
+/* Larger point hover feedback */
 .canvas-point:hover {
   r: 9;
   stroke-width: 3;
 }
 
+/* Point that is currently part of hull */
 .canvas-point-hull {
   fill: var(--color-hull);
   stroke: var(--color-point-stroke);
 }
 
+/* Start point highlight */
 .canvas-point-pivot {
   stroke: #73d2de;
   stroke-width: 4;
 }
 
+/* Point already selected during sorting process */
 .canvas-point-sorted {
   fill: #73d2de;
   stroke: #e8fbff;
   stroke-width: 3;
 }
 
+/* Current point that is being processed by animation */
 .canvas-point-current {
   fill: #73d2de;
   stroke-width: 4;
 }
 
-.canvas-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.canvas-footer p {
-  margin: 0;
-  color: var(--color-muted);
-  font-size: 13px;
-  text-align: right;
-}
-
+/* Legend item wrapper */
 .legend {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
+/* Legend row */
 .legend span {
   display: inline-flex;
   align-items: center;
@@ -174,20 +173,24 @@
   font-weight: 800;
 }
 
+/* Circular legend */
 .legend-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
 }
 
+/* Legend color for ordinary input points */
 .legend-dot.point {
   background: var(--color-point);
 }
 
+/* Legend color for hull points */
 .legend-dot.hull {
   background: var(--color-hull);
 }
 
+/* Legend line marker for hull edges */
 .legend-line {
   width: 22px;
   height: 2px;

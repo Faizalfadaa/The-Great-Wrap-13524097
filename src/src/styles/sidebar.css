@@ -1,4 +1,4 @@
-/* Sidebar kiri untuk input dataset dan kontrol algoritma. */
+/* Left sidebar for input and algorithm selection */
 .input-sidebar {
   position: relative;
   display: flex;
@@ -9,12 +9,14 @@
   overflow: auto;
 }
 
+/* Wrapper for sidebar content that can be blurred during animation */
 .sidebar-lock-content {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
+/* Disable and blur sidebar controls while animation is running */
 .input-sidebar-locked .sidebar-lock-content {
   filter: blur(2px);
   opacity: 0.46;
@@ -22,6 +24,7 @@
   user-select: none;
 }
 
+/* Overlay text shown when sidebar is locked */
 .input-sidebar-locked::after {
   position: absolute;
   inset: 0;
@@ -37,12 +40,14 @@
   pointer-events: none;
 }
 
+/* Section layout inside sidebar */
 .sidebar-section,
 .control-section {
   display: grid;
   gap: 12px;
 }
 
+/* Upload file section heading */
 .sidebar-section h2 {
   margin: 0;
   color: var(--color-text);
@@ -51,6 +56,7 @@
   letter-spacing: 0;
 }
 
+/* Upload file description in upload file section */
 .sidebar-copy {
   margin: 0;
   color: var(--color-muted);
@@ -58,7 +64,7 @@
   line-height: 1.5;
 }
 
-/* Area klik untuk memilih file CSV/TXT. */
+/* Click area dropzone for upload file CSV or TXT */
 .file-dropzone {
   display: grid;
   min-height: 78px;
