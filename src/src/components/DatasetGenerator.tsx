@@ -14,7 +14,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
   // Store number of points to generate (Default 24 Points)
   const [generatorCount, setGeneratorCount] = useState(24)
 
-  // Create point dataset based on selected generator shape.
+  // Create point dataset based on selected generator shape
   const generateDataset = () => {
     const generatedPoints: Point[] = []
     const count = Math.max(3, generatorCount)
@@ -50,7 +50,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
       return
     }
 
-    // Create dataset generator Triangle with 3 fixed corners
+    // Create dataset generator Triangle
     if (generatorShape == "Triangle") {
       let p1 = createPoint(0, 240)
       let p2 = createPoint(-360, -220)
@@ -62,15 +62,28 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
 
       for (let i = 0; i < generatorCount; i++) {
         let side = Math.floor(Math.random() * 3)
-        let t = Math.random()
+        let startPoint: Point
+        let endPoint: Point
 
         if (side == 0) {
-          generatedPoints.push(createPoint(p1.x + (p2.x - p1.x) * t, p1.y + (p2.y - p1.y) * t))
+          startPoint = p1
+          endPoint = p2
         } else if (side == 1) {
-          generatedPoints.push(createPoint(p2.x + (p3.x - p2.x) * t, p2.y + (p3.y - p2.y) * t))
+          startPoint = p2
+          endPoint = p3
         } else {
-          generatedPoints.push(createPoint(p3.x + (p1.x - p3.x) * t, p3.y + (p1.y - p3.y) * t))
+          startPoint = p3
+          endPoint = p1
         }
+
+        let minX = Math.min(startPoint.x, endPoint.x)
+        let maxX = Math.max(startPoint.x, endPoint.x)
+        let x = minX + Math.random() * (maxX - minX)
+        let m = (endPoint.y - startPoint.y) / (endPoint.x - startPoint.x)
+        let c = -m * startPoint.x + startPoint.y
+        let y = m * x + c
+
+        generatedPoints.push(createPoint(x, y))
       }
 
       onGenerate(generatedPoints)
