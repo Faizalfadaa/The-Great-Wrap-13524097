@@ -7,6 +7,7 @@ type DatasetGeneratorProps = {
   onGenerate: (points: Point[]) => void
 }
 
+// Render Datset Generator section
 export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
   // Store selected generator shape
   const [generatorShape, setGeneratorShape] = useState<GeneratorShape>("Random")
@@ -17,7 +18,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
   // Create point dataset based on selected generator shape
   const generateDataset = () => {
     const generatedPoints: Point[] = []
-    const count = Math.max(3, generatorCount)
+    const count = Math.max(1, generatorCount)
 
     // Create dataset generator Rectangle 
     if (generatorShape == "Rectangle") {
@@ -31,7 +32,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
       generatedPoints.push(createPoint(right, top))
       generatedPoints.push(createPoint(left, top))
 
-      for (let i = 0; i < generatorCount; i++) {
+      for (let i = 0; i < generatorCount - 4; i++) {
         let side = Math.floor(Math.random() * 4)
         let t = Math.random()
 
@@ -60,7 +61,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
       generatedPoints.push(p2)
       generatedPoints.push(p3)
 
-      for (let i = 0; i < generatorCount; i++) {
+      for (let i = 0; i < generatorCount - 3; i++) {
         let side = Math.floor(Math.random() * 3)
         let startPoint: Point
         let endPoint: Point
@@ -133,7 +134,7 @@ export function DatasetGenerator({ onGenerate }: DatasetGeneratorProps) {
         <span>Points Count</span>
         <input
           max="120"
-          min="3"
+          min="1"
           type="range"
           value={generatorCount}
           onChange={(event) => setGeneratorCount(Number(event.target.value))}

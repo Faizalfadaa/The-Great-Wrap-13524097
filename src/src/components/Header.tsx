@@ -1,3 +1,4 @@
+// Render Header section
 export function Header() {
   return (
     <header className="visualizer-header">
