@@ -51,7 +51,6 @@
   border-radius: 8px;
   background-color: var(--color-canvas-bg);
   cursor: crosshair;
-  touch-action: none;
 }
 
 /* Make grid and axis should not capture pointer events */
@@ -127,7 +126,6 @@
 
 /* Larger point hover feedback */
 .canvas-point:hover {
-  r: 9;
   stroke-width: 3;
 }
 
