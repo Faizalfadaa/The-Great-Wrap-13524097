@@ -1,10 +1,12 @@
 /* Halaman utama visualizer, termasuk background gelap dan aksen merah. */
 .visualizer-page {
   display: grid;
-  height: 100vh;
+  min-width: 1516px;
+  min-height: 960px;
   padding: 18px;
-  grid-template-rows: auto minmax(0, 1fr);
-  overflow: hidden;
+  grid-template-rows: auto 860px;
+  align-content: start;
+  overflow: auto;
   background:
     radial-gradient(
       circle at top right,
@@ -18,7 +20,7 @@
 /* Header judul aplikasi dan ringkasan state UI. */
 .visualizer-header {
   display: flex;
-  width: min(1480px, 100%);
+  width: 1480px;
   margin: 0 auto 12px;
   align-items: end;
   justify-content: space-between;
@@ -27,7 +29,7 @@
 
 .visualizer-header h1 {
   margin: 6px 0 0;
-  font-size: clamp(28px, 3vw, 40px);
+  font-size: 40px;
   line-height: 1.1;
   letter-spacing: 0;
 }
@@ -45,10 +47,10 @@
 /* Layout utama: sidebar, canvas, dan inspector. */
 .visualizer-workspace {
   display: grid;
-  grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(260px, 310px);
+  grid-template-columns: 330px 808px 310px;
   gap: 16px;
-  width: min(1480px, 100%);
-  min-height: 0;
+  width: 1480px;
+  height: 860px;
   margin: 0 auto;
   align-items: stretch;
   overflow: hidden;
