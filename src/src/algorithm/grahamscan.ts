@@ -1,4 +1,4 @@
-import { angle, distance, orientation, Point } from "./point";
+import { ERROR, angle, distance, orientation, Point } from "./point";
 import { StepPhase, type Step } from "../types";
 
 // Graham Scan Algorithm
@@ -63,7 +63,7 @@ export function grahamScan(points: Point[]) : Step[] {
 
         const angleA = angle(minPoint, a)
         const angleB = angle(minPoint, b)
-        if (angleA !== angleB) {
+        if (Math.abs(angleA - angleB) > ERROR) {
             return angleA - angleB;
         }
 

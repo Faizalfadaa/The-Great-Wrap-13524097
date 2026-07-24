@@ -1,4 +1,5 @@
 // Initialize Point type
+export const ERROR = 1e-7
 export class Point {
     x: number
     y: number
@@ -29,6 +30,10 @@ export function pointToLine(p: Point, line: Point[]) : number {
 // Get the orientation from 3 points
 export function orientation(p1: Point, p2: Point, p3: Point) : number {
     let d : number = (p3.y - p2.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p3.x - p2.x)
+    if (Math.abs(d) < ERROR) {
+        return 0
+    }
+    
     if (d > 0) {
         return 1
     }

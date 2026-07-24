@@ -1,4 +1,4 @@
-import { Point, pointToLine } from "./point";
+import { ERROR, Point, pointToLine } from "./point";
 import { StepPhase, type Step } from "../types";
 
 export function quickHull(points: Point[]): Step[] {
@@ -200,9 +200,10 @@ export function createSegment(p1: Point, p2: Point, list: Point[]): [Point[], Po
 
     // Cluster all the points
     for (const point of list) {
-        if (point.y > m * point.x + c) {
+        let lineY = m * point.x + c
+        if (point.y > lineY + ERROR) {
             above.push(point)
-        } else if (point.y < m * point.x + c) {
+        } else if (point.y < lineY - ERROR) {
             below.push(point)
         }
     }
