@@ -2,8 +2,10 @@
 
 The Great Wrap adalah aplikasi untuk menghitung dan memvisualisasikan Convex Hull dari sekumpulan titik dua dimensi. Website ini dibuat untuk membantu user melihat hasil akhir Convex Hull dan proses kerja algoritma secara bertahap. Algoritma yang digunakan adalah Graham Scan, Jarvis March, dan Quickhull
 
-## Fitur Program
-# Fitur Input
+![](Picture.png)
+
+# Fitur Program
+## Fitur Input
 - Menambahkan titik secara manual dengan klik pada canvas
 - Menghapus titik dengan klik pada titik di canvas
 - Import dataset titik dari file `.txt` atau `.csv`
@@ -13,12 +15,12 @@ The Great Wrap adalah aplikasi untuk menghitung dan memvisualisasikan Convex Hul
   - Rectangle
   - Cluster
 
-# Pilihan Algoritma
+## Pilihan Algoritma
   - Graham Scan
   - Jarvis March
   - QuickHull
 
-# Visualisasi Canvas
+## Visualisasi Canvas
 - Menampilkan visualisasi titik biasa, titik hull, dan sisi hull dengan warna yang berbeda
 - Menampilkan animasi step-by-step proses algoritma setiap algoritma
 - Playback control untuk animasi:
@@ -28,26 +30,26 @@ The Great Wrap adalah aplikasi untuk menghitung dan memvisualisasikan Convex Hul
   - Previous Step
   - Stop
 
-# Statistic Algoritma
+## Statistic Algoritma
 - Menampilkan statistik algoritma seperti:
   - Jumlah titik
   - Jumlah titik hull
   - Runtime
 - Menampilkan benchmark runtime untuk setiap algoritma
 
-# Edge Case Handling
+## Edge Case Handling
 - Menangani beberapa kasus khusus:
   - Titik duplikat
   - Jumlah titik kurang dari tiga
   - Titik kolinear
   - Seluruh titik berada pada satu garis
 
-## Teknologi dan Framework
+# Teknologi dan Framework
 - React 
 - TypeScript
 - Vite 
 
-## Struktur Program
+# Struktur Program
 
 ```text
 The-Great-Wrap-13524097
@@ -79,7 +81,7 @@ The-Great-Wrap-13524097
 |   |-- test2.csv
 ```
 
-## Format Input File
+# Format Input File
 File input dapat berupa `.txt` atau `.csv`. Setiap baris berisi satu titik dengan format dua angka yang dipisah dengan spasi
 Contoh Input FIle:
 
@@ -89,11 +91,11 @@ Contoh Input FIle:
 50 -10
 ```
 
-## Convex Hull
+# Convex Hull
 Convex hull adalah himpunan atau bentuk cembung terkecil yang dapat mencakup seluruh titik dalam suatu ruang Euclidean. Pada ruang dua dimensi (2D), convex hull berbentuk poligon cembung yang mengelilingi semua titik, sedangkan pada ruang tiga dimensi (3D), convex hull berbentuk polihedron cembung. Convex hull banyak digunakan dalam bidang geometri komputasi, pengolahan citra, perencanaan rute, dan pemodelan objek.
 
-## Graham Scan
-# Langkah-Langkah Algoritma 
+# Graham Scan
+## Langkah-Langkah Algoritma 
 1. Menentukan titik awal
 Algoritma dimulai dengan mencari titik yang memiliki koordinat (y) paling kecil. Jika terdapat beberapa titik dengan nilai (y) yang sama, dipilih titik dengan koordinat (x) paling kecil. Titik ini digunakan sebagai titik awal karena pasti berada pada bagian convex hull.
 
@@ -115,13 +117,13 @@ Jika ketiga titik membentuk belokan ke kiri, titik baru dimasukkan dan dipertaha
 7. Menghasilkan convex hull
 Proses tersebut dilakukan hingga seluruh titik selesai diperiksa. Setelah selesai, titik-titik yang tersisa dalam stack merupakan titik-titik pembentuk convex hull.
 
-# Analisis Kompleksitas Algoritma
+## Analisis Kompleksitas Algoritma
 Kompleksitas Waktu: (O(n log n)). Proses mencari titik paling bawah membutuhkan waktu (O(n)), mengurutkan titik-titik membutuhkan waktu (O(n log n)), dan membangun convex hull melalui operasi stack membutuhkan waktu (O(n))
 
 Kompleksitas Ruang: (O(n)), karena stack digunakan untuk menyimpan titik-titik selama proses pembentukan convex hull dan tidak terdapat penggunaan ruang tambahan lain yang signifikan.
 
-## Jarvis March
-# Langkah-Langkah Algoritma 
+# Jarvis March
+## Langkah-Langkah Algoritma 
 
 1. Menghapus titik duplikat
 Titik-titik yang mempunyai koordinat (x) dan (y) yang sama dihapus agar tidak diproses lebih dari satu kali.
@@ -153,17 +155,17 @@ Pemeriksaan diulangi sampai algoritma kembali ke titik awal.
 10. Menghasilkan convex hull
 Semua titik yang telah dimasukkan ke dalam daftar hasil merupakan titik-titik pembentuk convex hull.
 
-# Analisis Kompleksitas Algoritma
+## Analisis Kompleksitas Algoritma
 Kompleksitas Waktu: (O(m * n)), dengan (n) merupakan jumlah titik masukan dan (m) merupakan jumlah titik keluaran atau titik pada convex hull, dengan (m <= n). Untuk setiap titik pada convex hull, algoritma memeriksa seluruh titik lainnya untuk menentukan titik berikutnya.
 
 Kompleksitas Waktu pada Kasus Terburuk: (O(n^2)). Kasus terburuk terjadi ketika seluruh titik berada pada convex hull sehingga (m = n)
 
 Kompleksitas Ruang: (O(n)), karena algoritma menggunakan ruang tambahan sebesar (n) untuk menyimpan titik-titik.
 
-## QuickHull
+# QuickHull
 Algoritma QuickHull merupakan algoritma Divide and Conquer yang memiliki cara kerja mirip dengan QuickSort
 
-# Langkah-Langkah Algoritma 
+## Langkah-Langkah Algoritma 
 1. Menentukan titik paling kiri dan paling kanan
 Cari titik dengan koordinat (x) paling kecil, yaitu min_x, dan titik dengan koordinat (x) paling besar, yaitu max_x.
 
@@ -185,12 +187,12 @@ Rekursi dihentikan ketika tidak ada lagi titik yang berada di luar suatu garis.
 7. Membentuk convex hull
 Titik-titik ujung dari setiap garis yang diperoleh selama proses rekursif dimasukkan ke dalam convex hull. Setelah seluruh proses selesai, kumpulan titik tersebut membentuk convex hull.
 
-# Analisis Kompleksitas Algoritma
+## Analisis Kompleksitas Algoritma
 Kompleksitas Waktu: Pada kasus rata-rata, kompleksitas waktunya adalah (O(n log n)). Pada kasus terburuk, kompleksitas waktunya dapat menjadi (O(n^2)).
 
 Kompleksitas Ruang: (O(n)), bergantung pada proses rekursif dan data titik yang diproses.
 
-## Cara Menjalankan Program
+# Cara Menjalankan Program
 Masuk ke folder source aplikasi:
 
 ```bash
@@ -215,7 +217,7 @@ Buka URL yang muncul di terminal, seperti
 http://localhost:5173
 ```
 
-## Cara Menggunakan Program
+# Cara Menggunakan Program
 1. Masukkan titik dengan klik pada canvas, upload file, atau gunakan dataset generator
 2. Tambahkan titik atau hapus titik pada canvas jika diperlukan
 2. Pilih algoritma yang ingin digunakan (Graham Scan, Jarvis March, atau Quickhull)
@@ -223,13 +225,13 @@ http://localhost:5173
 4. Gunakan playback control untuk melihat proses algoritma
 5. Lihat hasil Convex Hull, runtime, dan benchmark pada panel sebelah kanan
 
-## Video Demonstrasi
+# Video Demonstrasi
 
 ```text
-Link video: -
+Link video: https://drive.google.com/file/d/18tIL74lOvYkXemGjVO_4VC0TPPHydp_7/view?usp=sharing 
 ```
 
-## Referensi
+# Referensi
 - https://www.geeksforgeeks.org/dsa/convex-hull-using-jarvis-algorithm-or-wrapping/
 - https://www.geeksforgeeks.org/dsa/convex-hull-using-graham-scan/
 - https://www.geeksforgeeks.org/dsa/quickhull-algorithm-convex-hull/ 
